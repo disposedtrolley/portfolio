@@ -19,7 +19,6 @@ export function initStrip() {
 export function loadProject(project) {
   stripInner.innerHTML = '';
   strip.scrollLeft = 0;
-  strip.style.background = project.background || '#f5f2ee';
 
   if (project.story) {
     storyContent.innerHTML = marked.parse(project.story);

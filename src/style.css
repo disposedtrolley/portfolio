@@ -12,9 +12,7 @@
   --sidebar-text: #e8e4dc;
   --sidebar-muted: #888;
   --sidebar-accent: #c8b89a;
-  --strip-bg: #f5f2ee;
-  --story-bg: #faf8f5;
-  --about-bg: #faf8f5;
+  --page-bg: #f0ece4;
   --font-serif: 'Playfair Display', Georgia, serif;
   --strip-height: 67vh;
   --story-height: 33vh;
@@ -203,7 +201,7 @@ html, body {
   flex: 2;
   overflow-x: auto;
   overflow-y: hidden;
-  background: var(--strip-bg);
+  background: var(--page-bg);
   }
 
 #photo-strip-inner {
@@ -219,7 +217,7 @@ html, body {
 #project-story {
   flex: 1;
   overflow-y: auto;
-  background: var(--story-bg);
+  background: var(--page-bg);
   border-top: 1px solid #ddd8d0;
   padding: 28px 48px;
 }
@@ -294,7 +292,7 @@ html, body {
   flex: 1;
   overflow: hidden;
   position: relative;
-  background: #f0ece4;
+  background: var(--page-bg);
   cursor: grab;
 }
 #scrapbook-view:active { cursor: grabbing; }
@@ -380,7 +378,7 @@ html, body {
 #about-view {
   flex: 1;
   overflow-y: auto;
-  background: var(--about-bg);
+  background: var(--page-bg);
   padding: 64px 48px;
 }
 
