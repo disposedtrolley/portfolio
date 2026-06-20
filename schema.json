@@ -1,0 +1,178 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PhotographyPortfolio",
+  "type": "object",
+  "required": ["meta", "projects"],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "description": "Site-level metadata shown in the sidebar header and page title.",
+      "required": ["title", "author"],
+      "properties": {
+        "title": { "type": "string" },
+        "author": { "type": "string" },
+        "tagline": { "type": "string" },
+        "avatar": { "type": "string", "description": "Path or URL to a portrait image used in the sidebar." },
+        "bio": {
+          "type": "string",
+          "description": "Free-form Markdown rendered on the dedicated About page."
+        },
+        "contact": {
+          "type": "object",
+          "properties": {
+            "email": { "type": "string", "format": "email" },
+            "instagram": { "type": "string" },
+            "website": { "type": "string", "format": "uri" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "projects": {
+      "type": "array",
+      "description": "Ordered list of projects shown in the sidebar.",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/Project" }
+    }
+  },
+  "additionalProperties": false,
+
+  "definitions": {
+    "Project": {
+      "type": "object",
+      "required": ["id", "title", "photos"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique slug used in URLs and as a React key.",
+          "pattern": "^[a-z0-9-]+$"
+        },
+        "title": { "type": "string" },
+        "description": {
+          "type": "string",
+          "description": "Short paragraph shown below the project title in the sidebar when selected."
+        },
+        "coverPhoto": {
+          "type": "string",
+          "description": "ID of the photo to use as the sidebar thumbnail. Defaults to the first photo."
+        },
+        "year": { "type": "integer" },
+        "location": { "type": "string" },
+        "canvas": {
+          "$ref": "#/definitions/CanvasSettings"
+        },
+        "photos": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/Photo" }
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "CanvasSettings": {
+      "type": "object",
+      "description": "Per-project canvas configuration. All fields are optional.",
+      "properties": {
+        "background": {
+          "type": "string",
+          "description": "CSS color for the canvas background.",
+          "default": "#f5f2ee"
+        },
+        "layout": {
+          "$ref": "#/definitions/LayoutAlgorithm"
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "LayoutAlgorithm": {
+      "type": "object",
+      "description": "Controls how photos are algorithmically arranged on the canvas.",
+      "required": ["algorithm"],
+      "properties": {
+        "algorithm": {
+          "type": "string",
+          "enum": ["scatter", "grid", "spiral", "clusters"],
+          "description": "scatter: organic random placement with slight rotations. grid: clean rows/columns with breathing room. spiral: Archimedean spiral from center. clusters: grouped by implicit proximity, small rotations within each cluster.",
+          "default": "scatter"
+        },
+        "seed": {
+          "type": "integer",
+          "description": "Random seed so the layout is deterministic across renders. Change to get a different arrangement.",
+          "default": 42
+        },
+        "padding": {
+          "type": "number",
+          "description": "Minimum gap in logical pixels between photo edges.",
+          "default": 60
+        },
+        "sizeVariance": {
+          "type": "number",
+          "description": "How much photo widths vary relative to the base size. 0 = uniform, 1 = wide range. Only applies to scatter and clusters.",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 0.3
+        },
+        "rotationRange": {
+          "type": "number",
+          "description": "Max rotation in degrees applied to each photo (positive or negative). 0 disables rotation.",
+          "minimum": 0,
+          "maximum": 45,
+          "default": 6
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "Photo": {
+      "type": "object",
+      "required": ["id", "src"],
+      "properties": {
+        "id": { "type": "string" },
+        "src": {
+          "type": "string",
+          "description": "Path or URL to the image file."
+        },
+        "alt": {
+          "type": "string",
+          "description": "Accessible alt text."
+        },
+        "aspectRatio": {
+          "type": "number",
+          "description": "width / height. Used by the layout algorithm to allocate space before the image loads. If omitted, defaults to 1.5 (3:2 landscape) until the image reports its natural size.",
+          "exclusiveMinimum": 0
+        },
+        "flip": {
+          "$ref": "#/definitions/FlipSide"
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "FlipSide": {
+      "type": "object",
+      "description": "Content shown on the back of the photo when clicked.",
+      "required": ["markdown"],
+      "properties": {
+        "markdown": {
+          "type": "string",
+          "description": "Free-form Markdown rendered on the back of the card. Supports headings, bold, italic, lists, and inline code."
+        },
+        "background": {
+          "type": "string",
+          "description": "CSS color for the flip-side background. Defaults to a dark tone complementary to the canvas.",
+          "default": "#1c1c1c"
+        },
+        "textColor": {
+          "type": "string",
+          "description": "CSS color for the rendered Markdown text.",
+          "default": "#f0ece4"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}
