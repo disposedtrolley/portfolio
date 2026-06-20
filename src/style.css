@@ -15,7 +15,7 @@
   --strip-bg: #f5f2ee;
   --story-bg: #faf8f5;
   --about-bg: #faf8f5;
-  --font-serif: 'Georgia', serif;
+  --font-serif: 'Playfair Display', Georgia, serif;
   --strip-height: 67vh;
   --story-height: 33vh;
 }
