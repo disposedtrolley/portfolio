@@ -105,12 +105,28 @@ function zoomAt(cx, cy, factor) {
   applyTransform();
 }
 
-export function loadScrapbook(scrapbook) {
-  inner.innerHTML = '';
+let lastScrapbook = null;
+let lastCanvasW = 0, lastCanvasH = 0;
 
-  // Canvas matches the viewport exactly — photos fill it at scale 1
-  canvasW = container.clientWidth;
-  canvasH = container.clientHeight;
+export function loadScrapbook(scrapbook, { force = false } = {}) {
+  const newW = container.clientWidth;
+  const newH = container.clientHeight;
+
+  // Skip re-scatter if only the height changed by a small amount — this happens
+  // constantly on mobile as the browser address bar appears/disappears.
+  if (!force && lastScrapbook === scrapbook) {
+    const dw = Math.abs(newW - lastCanvasW);
+    const dh = Math.abs(newH - lastCanvasH);
+    if (dw < 5 && dh < 120) return;
+  }
+
+  inner.innerHTML = '';
+  canvasW = newW;
+  canvasH = newH;
+  lastCanvasW = canvasW;
+  lastCanvasH = canvasH;
+  lastScrapbook = scrapbook;
+
   inner.style.width = `${canvasW}px`;
   inner.style.height = `${canvasH}px`;
 

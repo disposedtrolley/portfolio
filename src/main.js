@@ -75,7 +75,7 @@ function showScrapbook() {
   hideAll();
   scrapbookView.hidden = false;
   scrapbookLink.classList.add('active');
-  loadScrapbook(data.scrapbook);
+  loadScrapbook(data.scrapbook, { force: true });
   closeSidebar();
 }
 
