@@ -4,8 +4,8 @@ const container = document.getElementById('canvas-container');
 const inner = document.getElementById('canvas-inner');
 
 const PHOTO_MAX = 300;   // max photo dimension in canvas px
-const CANVAS_W = 2000;
-const CANVAS_H = 1400;
+const CANVAS_W = 1600;
+const CANVAS_H = 1100;
 
 let tx = 0, ty = 0, scale = 1;
 let dragging = false;
@@ -148,7 +148,7 @@ function scatter(photos) {
     const row = Math.floor(i / cols);
 
     // Random position within cell, with margin so photos don't clip edges
-    const margin = 40;
+    const margin = 16;
     const maxW = Math.min(PHOTO_MAX, cellW - margin * 2);
     const maxH = Math.min(PHOTO_MAX, cellH - margin * 2);
 
