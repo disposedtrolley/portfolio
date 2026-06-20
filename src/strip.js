@@ -1,5 +1,4 @@
 import { marked } from 'marked';
-import { attachGeoMap } from './geo.js';
 
 const strip = document.getElementById('photo-strip');
 const stripInner = document.getElementById('photo-strip-inner');
@@ -75,33 +74,10 @@ function createCard(photo) {
   img.draggable = false;
   front.appendChild(img);
 
-  const back = document.createElement('div');
-  back.className = 'photo-card__back';
-  let onFlip = null;
-  if (photo.flip) {
-    back.style.background = photo.flip.background || '#1c1c1c';
-    back.style.color = photo.flip.textColor || '#f0ece4';
-    back.innerHTML = marked.parse(photo.flip.markdown || '');
-  }
-  if (photo.geo) {
-    onFlip = attachGeoMap(back, photo.geo);
-  }
-
   card.appendChild(front);
-  card.appendChild(back);
 
   // When this image loads, resize all cards (layout is guaranteed settled by then)
   img.addEventListener('load', () => afterLayout(resizeAllCards));
-
-  let pointerMoved = false;
-  card.addEventListener('pointerdown', () => { pointerMoved = false; });
-  card.addEventListener('pointermove', () => { pointerMoved = true; });
-  card.addEventListener('pointerup', () => {
-    if (!pointerMoved && photo.flip) {
-      card.classList.toggle('flipped');
-      if (card.classList.contains('flipped') && onFlip) onFlip();
-    }
-  });
 
   return card;
 }
