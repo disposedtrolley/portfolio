@@ -15,6 +15,7 @@
         "id": "sb-1",
         "src": "https://picsum.photos/seed/sb1/800/600",
         "alt": "A quiet street",
+        "geo": { "lat": 38.7169, "lng": -9.1399, "zoom": 14 },
         "flip": { "markdown": "Somewhere in Lisbon, 2022." }
       },
       {
@@ -86,6 +87,7 @@
           "id": "tokyo-1",
           "src": "https://picsum.photos/seed/tokyo1/800/533",
           "alt": "Street scene in Shinjuku",
+          "geo": { "lat": 35.6938, "lng": 139.7034, "zoom": 15 },
           "flip": {
             "markdown": "## Shinjuku, 11pm\n\nThe rain had just stopped. Everyone moved like they had somewhere to be."
           }

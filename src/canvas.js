@@ -1,4 +1,5 @@
 import { marked } from 'marked';
+import { attachGeoMap } from './geo.js';
 
 const container = document.getElementById('canvas-container');
 const inner = document.getElementById('canvas-inner');
@@ -185,10 +186,14 @@ function createCard(photo, x, y, w, h, rot) {
 
   const back = document.createElement('div');
   back.className = 'canvas-card__back';
+  let onFlip = null;
   if (photo.flip) {
     back.style.background = photo.flip.background || '#1c1c1c';
     back.style.color = photo.flip.textColor || '#f0ece4';
     back.innerHTML = marked.parse(photo.flip.markdown || '');
+  }
+  if (photo.geo) {
+    onFlip = attachGeoMap(back, photo.geo);
   }
 
   card.appendChild(front);
@@ -212,7 +217,10 @@ function createCard(photo, x, y, w, h, rot) {
   card.addEventListener('pointermove', () => { pointerMoved = true; });
   card.addEventListener('pointerup', (e) => {
     e.stopPropagation();
-    if (!pointerMoved && photo.flip) card.classList.toggle('flipped');
+    if (!pointerMoved && photo.flip) {
+      card.classList.toggle('flipped');
+      if (card.classList.contains('flipped') && onFlip) onFlip();
+    }
   });
 
   return card;

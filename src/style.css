@@ -282,6 +282,9 @@ html, body {
 .photo-card__back h3 { font-weight: normal; margin-bottom: 0.5em; }
 .photo-card__back p { margin-bottom: 0.8em; }
 .photo-card__back p:last-child { margin-bottom: 0; }
+.photo-card__back .card-map {
+  height: 160px;
+}
 .photo-card__back ul,
 .photo-card__back ol { padding-left: 1.2em; margin-bottom: 0.8em; }
 
@@ -359,6 +362,14 @@ html, body {
 .canvas-card__back h3 { font-weight: normal; margin-bottom: 0.4em; font-size: 0.9rem; }
 .canvas-card__back p { margin-bottom: 0.6em; }
 .canvas-card__back p:last-child { margin-bottom: 0; }
+
+.card-map {
+  margin-top: 12px;
+  height: 140px;
+  border-radius: 2px;
+  overflow: hidden;
+  filter: sepia(0.7) contrast(0.85) brightness(1.05) saturate(0.8);
+}
 
 /* ── About view ── */
 
