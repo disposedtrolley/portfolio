@@ -109,11 +109,13 @@ for (const project of data.projects) {
   projectList.appendChild(a);
 }
 
-// Re-scatter on resize (debounced)
+// Re-scatter on resize (debounced). Skip browser-level pinch-zoom events,
+// which fire window.resize but don't change the layout dimensions.
 let resizeTimer;
 window.addEventListener('resize', () => {
   clearTimeout(resizeTimer);
   resizeTimer = setTimeout(() => {
+    if (window.visualViewport && window.visualViewport.scale !== 1) return;
     if (!scrapbookView.hidden) loadScrapbook(data.scrapbook);
   }, 200);
 });
