@@ -1,77 +1,90 @@
 # Portfolio Site — Build Plan
 
 ## Stack
-Vanilla JS + CSS, Vite (bundler/dev server only), `marked` for Markdown rendering. No framework.
+Vanilla JS + CSS, Vite (bundler/dev server only), `marked` for Markdown, `leaflet` for geo maps. No framework.
 
-## Data model
-- `data.json` — source of truth, validated against `schema.json`
-- `meta`: site title, author, bio (rendered on About page), contact links
-- `projects[]`: id (slug), title, description, year, location, canvas settings, photos[]
-- `photo`: id, src, alt, aspectRatio, flip.markdown (free-form Markdown)
-- `canvas.layout`: algorithm (scatter/grid/spiral/clusters), seed, padding, sizeVariance, rotationRange
+## Data model (`data.json`)
+- `meta`: title, author, bio (Markdown, rendered on About page), contact links
+- `scrapbook.photos[]`: photos for the canvas home page
+- `projects[]`: id, title, year, location, story (Markdown), photos[]
+- `photo`: id, src, alt, `flip` (optional: markdown, background, textColor), `geo` (optional: lat, lng, zoom)
+
+All photos (scrapbook and project) share the same schema. Flip is only active on scrapbook canvas cards — project strip photos are purely visual.
 
 ## File structure
 ```
-index.html          — app shell, sidebar, canvas-view, about-view
+index.html          — app shell
 src/
-  main.js           — data load, routing (#project/:id, #about), sidebar render, mobile drawer
-  canvas.js         — pan/zoom engine, pinch-zoom, card creation, flip interaction
-  layout.js         — layout algorithms (scatter, grid, spiral, clusters), seeded PRNG
-  style.css         — all styles, mobile breakpoint at 768px
-data.json           — sample content (3 projects, placeholder images)
+  main.js           — routing (#scrapbook, #project/:id, #about), sidebar, mobile drawer
+  canvas.js         — scrapbook pan/zoom canvas, viewport-driven scatter layout, flip cards
+  strip.js          — horizontal photo strip for project pages, resize logic
+  geo.js            — lazy Leaflet map on flip back (OSM tiles + sepia filter)
+  style.css         — all styles, single --page-bg token, mobile breakpoint at 768px
+data.json           — sample content (scrapbook + 3 projects, placeholder images)
 schema.json         — JSON Schema for data.json
 ```
 
 ## Routing
-Hash-based: `#project/<id>` loads a project, `#about` shows the About page. Default route loads first project.
+Hash-based: `#scrapbook` (default), `#project/<id>`, `#about`.
 
-## Canvas engine (src/canvas.js)
-- Pan: pointerdown/move/up with pointer capture
-- Zoom: wheel event (cursor-centered) + two-finger pinch via pointer events
-- `loadProject(project)`: clears world, runs layout, centers viewport on content centroid
-- Initial zoom: 0.75 desktop, 0.55 mobile (based on `view.clientWidth < 600`)
-- `hasPanned` flag prevents accidental card flips after a drag
+## Scrapbook canvas (`src/canvas.js`)
+- Pan: mouse drag + single-finger touch
+- Zoom: wheel + two-finger pinch
+- Layout: viewport-driven grid-jitter scatter — canvas sized to container at load time, cols calculated from aspect ratio, photos fill cells with ±5° random rotation
+- Re-scatters on window resize (200ms debounce) and when navigating to scrapbook from same hash
+- Cards expand to min 200×200px when flipped so text/map is always readable
+- Font size scales with card width via `cqw` container query units (`container-type: size`)
 
-## Layout engine (src/layout.js)
-- `computeLayout(photos, settings, viewWidth)` — returns array of `{photo, x, y, width, height, rotation}`
-- BASE_WIDTH = 28% of viewWidth, clamped 180–340px (responsive to viewport)
-- All algorithms use seeded PRNG (mulberry32) for deterministic layouts
-- `normalizePositions` shifts output so bounding box starts at (2×padding, 2×padding)
+## Photo strip (`src/strip.js`)
+- Horizontally scrollable flex row, scrollbar hidden
+- Photos sized to fit visible height exactly, constrained by both width and height (correct aspect ratio after load via double-rAF)
+- ResizeObserver re-sizes all cards on viewport change
+- No flip interaction — project photos are purely visual
 
-## Mobile sidebar (≤768px)
-- Sidebar: `position: fixed`, hidden via `translateX(-100%)`, slides in with `.open` class
-- Hamburger `#menu-btn`: absolute, top-left of `#main`; hidden when sidebar is open (`#sidebar.open ~ #main > #menu-btn { display: none }`)
-- Close `#close-btn`: inside sidebar header, right-aligned, only visible on mobile
-- Backdrop `#sidebar-backdrop`: dimmed overlay, click to close
-- Selecting a project or About closes the drawer
+## Story panel
+- Bottom 1/3 of project view (flex: 1 vs strip flex: 2)
+- Per-project Markdown text, vertical scroll, scrollbar hidden
+- Hidden entirely if `project.story` is absent
 
-## Completed stages
-- [x] Stage 1: JSON schema
-- [x] Stage 2: Vite scaffold, sidebar, hash routing
-- [x] Stage 3: Canvas pan/zoom/pinch, layout algorithms, photo cards
-- [x] Stage 4: Responsive layout (viewport-relative photo sizing)
-- [x] Stage 5: Mobile sidebar (drawer, hamburger, backdrop)
+## Geo maps (`src/geo.js`)
+- Lazy-initialised Leaflet map on first flip of a card with `geo` field
+- OSM tiles with CSS filter: `sepia(0.7) contrast(0.85) brightness(1.05) saturate(0.8)` for rustic look
+- Leaflet default icon paths fixed for Vite bundling
 
-## Remaining stages
+## Sidebar
+- Desktop: fixed 220px left column
+- Mobile (≤768px): `position: fixed`, slides in with `.open` class
+- Structure: site title → Scrapbook link → "Projects" label + project list → About link
+- Hamburger `#menu-btn` top-left of main; hidden when sidebar open via sibling selector
+- Close `#close-btn` inside sidebar header, mobile only
 
-### Stage 6: Card flip interaction
-- Cards flip on click (already wired, needs visual testing)
-- CSS: `transform-style: preserve-3d`, front/back with `backface-visibility: hidden`
-- `--card-transform` CSS custom property preserves rotation on flipped state
-- Need to verify flip works correctly and back content (Markdown) renders well
+## Visual design
+- Font: Playfair Display (Google Fonts) for all serif text
+- Background: single `--page-bg: #f0ece4` across all views
+- Scrapbook cards: white border (`border: 5px solid #fff`), drop shadow, rotation via `--rot` CSS var
+- Sidebar: dark (`#1a1a1a`), accent colour `#c8b89a`
 
-### Stage 7: About page
-- `#about-view` toggles visible via routing
-- `data.meta.bio` rendered as Markdown into `#about-content`
-- Needs visual polish: typography, contact links rendering
+## Completed
+- [x] JSON schema
+- [x] Vite scaffold, routing, sidebar, mobile drawer
+- [x] Horizontal photo strip with correct sizing
+- [x] Scrapbook canvas with pan/zoom/pinch and viewport-filling scatter
+- [x] Card flip (scrapbook only) with Leaflet geo maps
+- [x] Unified background colour, Playfair Display font
+- [x] Hidden scrollbars on strip and story panel
 
-### Stage 8: Project transitions
-- Animate canvas out/in when switching projects (fade or slide)
-- Consider animating individual cards in on load (staggered entrance)
+## Remaining
 
-### Stage 9: Polish & production
-- Add `public/images/` and replace picsum placeholders with real photos
+### Content & production
+- Replace picsum placeholder images with real photos
+- Write real project stories and scrapbook captions
+- Add geo tags to real photos
 - Favicon, meta tags (og:image, description)
 - `vite build` output check
 - Test on real iOS/Android devices
-- Keyboard navigation (arrow keys to pan, escape to unflip)
+
+### Polish
+- About page typography and contact link rendering
+- Project transition animations (fade when switching projects)
+- Keyboard navigation (arrow keys to scroll strip, escape to unflip canvas cards)
+- Consider alternative project page layout (editorial vertical scroll)
