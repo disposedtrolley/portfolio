@@ -15,7 +15,11 @@
           <h1 id="site-title"></h1>
           <button id="close-btn" aria-label="Close menu">&#x2715;</button>
         </header>
-        <nav id="project-list"></nav>
+        <a id="scrapbook-link" href="#scrapbook">Scrapbook</a>
+        <div id="projects-section">
+          <span id="projects-label">Projects</span>
+          <nav id="project-list"></nav>
+        </div>
         <a id="about-link" href="#about">About</a>
       </aside>
 
@@ -23,6 +27,12 @@
         <button id="menu-btn" aria-label="Open menu">
           <span></span><span></span><span></span>
         </button>
+
+        <div id="scrapbook-view" hidden>
+          <div id="canvas-container">
+            <div id="canvas-inner"></div>
+          </div>
+        </div>
 
         <div id="project-view" hidden>
           <div id="photo-strip">

@@ -1,11 +1,14 @@
 import { marked } from 'marked';
 import { initStrip, loadProject } from './strip.js';
+import { initCanvas, loadScrapbook } from './canvas.js';
 import data from '../data.json';
 
 const siteTitle = document.getElementById('site-title');
 const projectList = document.getElementById('project-list');
 const aboutLink = document.getElementById('about-link');
+const scrapbookLink = document.getElementById('scrapbook-link');
 const projectView = document.getElementById('project-view');
+const scrapbookView = document.getElementById('scrapbook-view');
 const aboutView = document.getElementById('about-view');
 const aboutContent = document.getElementById('about-content');
 const sidebar = document.getElementById('sidebar');
@@ -23,6 +26,7 @@ if (data.meta.bio) {
 }
 
 initStrip();
+initCanvas();
 
 // ── Mobile sidebar ──
 
@@ -42,27 +46,39 @@ backdrop.addEventListener('click', closeSidebar);
 
 // ── Routing ──
 
+function hideAll() {
+  projectView.hidden = true;
+  scrapbookView.hidden = true;
+  aboutView.hidden = true;
+  aboutLink.classList.remove('active');
+  scrapbookLink.classList.remove('active');
+  document.querySelectorAll('#project-list a').forEach(a => a.classList.remove('active'));
+}
+
 function showProject(projectId) {
   const project = data.projects.find(p => p.id === projectId);
   if (!project) return;
-
+  hideAll();
   projectView.hidden = false;
-  aboutView.hidden = true;
-  aboutLink.classList.remove('active');
-
   document.querySelectorAll('#project-list a').forEach(a => {
     a.classList.toggle('active', a.dataset.id === projectId);
   });
-
   loadProject(project);
   closeSidebar();
 }
 
+function showScrapbook() {
+  hideAll();
+  scrapbookView.hidden = false;
+  scrapbookLink.classList.add('active');
+  loadScrapbook(data.scrapbook);
+  closeSidebar();
+}
+
 function showAbout() {
-  projectView.hidden = true;
+  hideAll();
   aboutView.hidden = false;
   aboutLink.classList.add('active');
-  document.querySelectorAll('#project-list a').forEach(a => a.classList.remove('active'));
   closeSidebar();
 }
 
@@ -70,11 +86,12 @@ function route() {
   const hash = window.location.hash;
   if (hash === '#about') {
     showAbout();
+  } else if (hash === '#scrapbook') {
+    showScrapbook();
   } else if (hash.startsWith('#project/')) {
     showProject(hash.slice('#project/'.length));
   } else {
-    const first = data.projects[0];
-    if (first) showProject(first.id);
+    showScrapbook();
   }
 }
 

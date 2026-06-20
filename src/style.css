@@ -4,6 +4,8 @@
   padding: 0;
 }
 
+[hidden] { display: none !important; }
+
 :root {
   --sidebar-width: 220px;
   --sidebar-bg: #1a1a1a;
@@ -72,10 +74,39 @@ html, body {
 }
 #close-btn:hover { color: var(--sidebar-text); }
 
-#project-list {
+#scrapbook-link {
+  display: block;
+  padding: 14px 20px;
+  font-size: 0.85rem;
+  color: var(--sidebar-muted);
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  border-bottom: 1px solid #2e2e2e;
+  transition: color 0.15s;
+}
+#scrapbook-link:hover { color: var(--sidebar-text); }
+#scrapbook-link.active { color: var(--sidebar-accent); }
+
+#projects-section {
   flex: 1;
   overflow-y: auto;
-  padding: 12px 0;
+  display: flex;
+  flex-direction: column;
+}
+
+#projects-label {
+  display: block;
+  padding: 14px 20px 6px;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #555;
+  pointer-events: none;
+}
+
+#project-list {
+  overflow-y: auto;
+  padding: 4px 0;
 }
 
 #project-list a {
@@ -253,6 +284,80 @@ html, body {
 .photo-card__back p:last-child { margin-bottom: 0; }
 .photo-card__back ul,
 .photo-card__back ol { padding-left: 1.2em; margin-bottom: 0.8em; }
+
+/* ── Scrapbook / canvas view ── */
+
+#scrapbook-view {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  background: #f0ece4;
+  cursor: grab;
+}
+#scrapbook-view:active { cursor: grabbing; }
+
+#canvas-container {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+#canvas-inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0;
+}
+
+.canvas-card {
+  position: absolute;
+  transform: rotate(var(--rot, 0deg));
+  transform-style: preserve-3d;
+  transition: transform 0.5s cubic-bezier(0.4, 0.2, 0.2, 1),
+              box-shadow 0.2s ease;
+  cursor: pointer;
+  box-shadow: 2px 4px 16px rgba(0,0,0,0.18);
+}
+.canvas-card:hover {
+  box-shadow: 4px 8px 24px rgba(0,0,0,0.28);
+  z-index: 10;
+}
+.canvas-card.flipped {
+  transform: rotate(var(--rot, 0deg)) rotateY(180deg);
+}
+
+.canvas-card__front,
+.canvas-card__back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  overflow: hidden;
+}
+
+.canvas-card__front img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+  user-select: none;
+}
+
+.canvas-card__back {
+  transform: rotateY(180deg);
+  padding: 16px;
+  overflow-y: auto;
+  font-family: var(--font-serif);
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+.canvas-card__back h1,
+.canvas-card__back h2,
+.canvas-card__back h3 { font-weight: normal; margin-bottom: 0.4em; font-size: 0.9rem; }
+.canvas-card__back p { margin-bottom: 0.6em; }
+.canvas-card__back p:last-child { margin-bottom: 0; }
 
 /* ── About view ── */
 
