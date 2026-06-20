@@ -202,7 +202,9 @@ html, body {
   overflow-x: auto;
   overflow-y: hidden;
   background: var(--page-bg);
-  }
+  scrollbar-width: none;
+}
+#photo-strip::-webkit-scrollbar { display: none; }
 
 #photo-strip-inner {
   display: flex;
@@ -220,7 +222,9 @@ html, body {
   background: var(--page-bg);
   border-top: 1px solid #ddd8d0;
   padding: 28px 48px;
+  scrollbar-width: none;
 }
+#project-story::-webkit-scrollbar { display: none; }
 
 #project-story-content {
   max-width: 680px;
