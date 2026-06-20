@@ -44,6 +44,10 @@ menuBtn.addEventListener('click', openSidebar);
 closeBtn.addEventListener('click', closeSidebar);
 backdrop.addEventListener('click', closeSidebar);
 
+scrapbookLink.addEventListener('click', () => {
+  if (window.location.hash === '#scrapbook') showScrapbook();
+});
+
 // ── Routing ──
 
 function hideAll() {
@@ -104,6 +108,15 @@ for (const project of data.projects) {
   a.href = `#project/${project.id}`;
   projectList.appendChild(a);
 }
+
+// Re-scatter on resize (debounced)
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    if (!scrapbookView.hidden) loadScrapbook(data.scrapbook);
+  }, 200);
+});
 
 window.addEventListener('hashchange', route);
 route();

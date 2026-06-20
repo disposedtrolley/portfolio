@@ -4,35 +4,23 @@ import { attachGeoMap } from './geo.js';
 const container = document.getElementById('canvas-container');
 const inner = document.getElementById('canvas-inner');
 
-const PHOTO_MAX = 300;   // max photo dimension in canvas px
-const CANVAS_W = 1600;
-const CANVAS_H = 1100;
-
 let tx = 0, ty = 0, scale = 1;
+let canvasW = 0, canvasH = 0; // set dynamically on each load
+
 let dragging = false;
 let dragStartX = 0, dragStartY = 0;
 let dragStartTx = 0, dragStartTy = 0;
-
-function fitCanvas() {
-  const vw = container.clientWidth;
-  const vh = container.clientHeight;
-  // Scale so the full canvas fits with padding, then center it
-  scale = Math.min(vw / CANVAS_W, vh / CANVAS_H) * 0.9;
-  tx = (vw - CANVAS_W * scale) / 2;
-  ty = (vh - CANVAS_H * scale) / 2;
-}
 
 function applyTransform() {
   inner.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`;
 }
 
 function clampTranslation() {
-  // Allow panning so the canvas never fully leaves the viewport
   const vw = container.clientWidth;
   const vh = container.clientHeight;
-  const cw = CANVAS_W * scale;
-  const ch = CANVAS_H * scale;
-  const pad = 120;
+  const cw = canvasW * scale;
+  const ch = canvasH * scale;
+  const pad = 80;
   tx = Math.min(tx, vw - pad);
   tx = Math.max(tx, -(cw - pad));
   ty = Math.min(ty, vh - pad);
@@ -40,9 +28,6 @@ function clampTranslation() {
 }
 
 export function initCanvas() {
-  fitCanvas();
-  applyTransform();
-
   // Pan — mouse
   container.addEventListener('mousedown', (e) => {
     if (e.target.closest('.canvas-card')) return;
@@ -94,26 +79,25 @@ export function initCanvas() {
         e.touches[1].clientX - e.touches[0].clientX,
         e.touches[1].clientY - e.touches[0].clientY
       );
-      const delta = dist / touchDist;
+      zoomAt(
+        (e.touches[0].clientX + e.touches[1].clientX) / 2,
+        (e.touches[0].clientY + e.touches[1].clientY) / 2,
+        dist / touchDist
+      );
       touchDist = dist;
-      const cx = (e.touches[0].clientX + e.touches[1].clientX) / 2;
-      const cy = (e.touches[0].clientY + e.touches[1].clientY) / 2;
-      zoomAt(cx, cy, delta);
     }
   }, { passive: false });
 
   // Zoom — wheel
   container.addEventListener('wheel', (e) => {
     e.preventDefault();
-    const delta = e.deltaY > 0 ? 0.92 : 1.08;
-    zoomAt(e.clientX, e.clientY, delta);
+    zoomAt(e.clientX, e.clientY, e.deltaY > 0 ? 0.92 : 1.08);
   }, { passive: false });
 }
 
 function zoomAt(cx, cy, factor) {
-  const newScale = Math.min(2.5, Math.max(0.25, scale * factor));
+  const newScale = Math.min(3, Math.max(0.3, scale * factor));
   const ratio = newScale / scale;
-  // Adjust translation so the point under the cursor stays fixed
   tx = cx - ratio * (cx - tx);
   ty = cy - ratio * (cy - ty);
   scale = newScale;
@@ -123,48 +107,49 @@ function zoomAt(cx, cy, factor) {
 
 export function loadScrapbook(scrapbook) {
   inner.innerHTML = '';
-  inner.style.width = `${CANVAS_W}px`;
-  inner.style.height = `${CANVAS_H}px`;
-  fitCanvas();
+
+  // Canvas matches the viewport exactly — photos fill it at scale 1
+  canvasW = container.clientWidth;
+  canvasH = container.clientHeight;
+  inner.style.width = `${canvasW}px`;
+  inner.style.height = `${canvasH}px`;
+
+  scale = 1; tx = 0; ty = 0;
   applyTransform();
 
-  const placed = scatter(scrapbook.photos);
-  for (const { photo, x, y, w, h, rot } of placed) {
+  for (const { photo, x, y, w, h, rot } of scatter(scrapbook.photos, canvasW, canvasH)) {
     inner.appendChild(createCard(photo, x, y, w, h, rot));
   }
 }
 
-function scatter(photos) {
-  // Grid-jitter: divide canvas into a grid, place one photo per cell
-  const cols = Math.ceil(Math.sqrt(photos.length * (CANVAS_W / CANVAS_H)));
-  const rows = Math.ceil(photos.length / cols);
-  const cellW = CANVAS_W / cols;
-  const cellH = CANVAS_H / rows;
+function scatter(photos, vw, vh) {
+  const n = photos.length;
+  // Choose cols so cells are as square as possible
+  const cols = Math.round(Math.sqrt(n * (vw / vh)));
+  const rows = Math.ceil(n / cols);
+  const cellW = vw / cols;
+  const cellH = vh / rows;
 
-  const result = [];
+  const margin = 10; // px gap between cells before jitter
+  const photoW = cellW - margin * 2;
+  const photoH = cellH - margin * 2;
+
   const shuffled = [...photos].sort(() => Math.random() - 0.5);
 
-  shuffled.forEach((photo, i) => {
+  return shuffled.map((photo, i) => {
     const col = i % cols;
     const row = Math.floor(i / cols);
 
-    // Random position within cell, with margin so photos don't clip edges
-    const margin = 16;
-    const maxW = Math.min(PHOTO_MAX, cellW - margin * 2);
-    const maxH = Math.min(PHOTO_MAX, cellH - margin * 2);
+    // Slight jitter so photos don't sit in a rigid grid
+    const jx = (Math.random() - 0.5) * margin * 1.5;
+    const jy = (Math.random() - 0.5) * margin * 1.5;
 
-    // We don't know aspect ratio yet, so use a fixed size; resize after load
-    const w = maxW;
-    const h = maxH;
+    const x = col * cellW + margin + jx;
+    const y = row * cellH + margin + jy;
+    const rot = (Math.random() - 0.5) * 10; // ±5°
 
-    const cx = col * cellW + margin + Math.random() * (cellW - margin * 2 - w);
-    const cy = row * cellH + margin + Math.random() * (cellH - margin * 2 - h);
-    const rot = (Math.random() - 0.5) * 14; // ±7 degrees
-
-    result.push({ photo, x: Math.max(0, cx), y: Math.max(0, cy), w, h, rot });
+    return { photo, x, y, w: photoW, h: photoH, rot };
   });
-
-  return result;
 }
 
 function createCard(photo, x, y, w, h, rot) {
@@ -199,12 +184,15 @@ function createCard(photo, x, y, w, h, rot) {
   card.appendChild(front);
   card.appendChild(back);
 
-  // Resize to correct aspect ratio once image loads
+  // Correct aspect ratio once the image loads, constrained to cell dimensions
   img.addEventListener('load', () => {
     const aspect = img.naturalWidth / img.naturalHeight;
     let fw = w, fh = h;
-    if (aspect > 1) { fh = Math.round(fw / aspect); }
-    else { fw = Math.round(fh * aspect); }
+    if (aspect > w / h) {
+      fh = Math.round(fw / aspect);
+    } else {
+      fw = Math.round(fh * aspect);
+    }
     card.style.width = `${fw}px`;
     card.style.height = `${fh}px`;
   });
