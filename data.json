@@ -13,24 +13,15 @@
     {
       "id": "tokyo-2024",
       "title": "Tokyo 2024",
-      "description": "Three weeks in Japan, shot on Portra 400.",
       "year": 2024,
       "location": "Tokyo, Japan",
-      "canvas": {
-        "background": "#f0ece4",
-        "layout": {
-          "algorithm": "scatter",
-          "seed": 7,
-          "sizeVariance": 0.35,
-          "rotationRange": 5
-        }
-      },
+      "background": "#f0ece4",
+      "story": "Three weeks in Japan in the dead of winter. I brought two rolls of Portra 400 thinking it would be enough.\n\nIt wasn't. I came back with fourteen.\n\nTokyo resists being photographed. Everything moves too fast, the light changes every few minutes, and the city has a way of making you feel like you're always in the wrong place. These are the moments I managed to hold onto.",
       "photos": [
         {
           "id": "tokyo-1",
           "src": "https://picsum.photos/seed/tokyo1/800/533",
           "alt": "Street scene in Shinjuku",
-          "aspectRatio": 1.5,
           "flip": {
             "markdown": "## Shinjuku, 11pm\n\nThe rain had just stopped. Everyone moved like they had somewhere to be."
           }
@@ -39,16 +30,14 @@
           "id": "tokyo-2",
           "src": "https://picsum.photos/seed/tokyo2/533/800",
           "alt": "Shrine gate at dusk",
-          "aspectRatio": 0.667,
           "flip": {
-            "markdown": "**Meiji Shrine**\n\nGolden hour through cedar trees."
+            "markdown": "**Meiji Shrine**\n\nGolden hour through cedar trees. I waited forty minutes for the crowd to thin."
           }
         },
         {
           "id": "tokyo-3",
           "src": "https://picsum.photos/seed/tokyo3/800/600",
           "alt": "Ramen shop interior",
-          "aspectRatio": 1.333,
           "flip": {
             "markdown": "A 12-seat counter in Shibuya. Opened in 1978.\n\n- Tonkotsu broth\n- Hand-cut noodles\n- No English menu"
           }
@@ -57,16 +46,14 @@
           "id": "tokyo-4",
           "src": "https://picsum.photos/seed/tokyo4/900/600",
           "alt": "Train platform at rush hour",
-          "aspectRatio": 1.5,
           "flip": {
             "markdown": "## Yamanote Line\n\nEvery face a separate story, moving in parallel."
           }
         },
         {
           "id": "tokyo-5",
-          "src": "https://picsum.photos/seed/tokyo5/600/800",
+          "src": "https://picsum.photos/seed/tokyo5/600/900",
           "alt": "Vending machines at night",
-          "aspectRatio": 0.75,
           "flip": {
             "markdown": "One of 5 million vending machines in Japan.\n\n*Shot at ISO 3200, handheld.*"
           }
@@ -75,7 +62,6 @@
           "id": "tokyo-6",
           "src": "https://picsum.photos/seed/tokyo6/800/534",
           "alt": "View from a rooftop in Nakameguro",
-          "aspectRatio": 1.5,
           "flip": {
             "markdown": "Nakameguro from above. Cherry blossoms two weeks out."
           }
@@ -85,116 +71,73 @@
     {
       "id": "sf-fog",
       "title": "SF Fog",
-      "description": "The city on its grey days.",
       "year": 2023,
       "location": "San Francisco, CA",
-      "canvas": {
-        "background": "#e8eaed",
-        "layout": {
-          "algorithm": "clusters",
-          "seed": 12,
-          "sizeVariance": 0.2,
-          "rotationRange": 3
-        }
-      },
+      "background": "#e8eaed",
+      "story": "San Francisco looks best when you can't quite see it.\n\nThe fog does something to the light here that I've never been able to fully explain — it flattens everything into a kind of soft grey that makes the color that *does* survive feel impossibly vivid.",
       "photos": [
         {
           "id": "sf-1",
           "src": "https://picsum.photos/seed/sf1/800/533",
           "alt": "Golden Gate in fog",
-          "aspectRatio": 1.5,
-          "flip": {
-            "markdown": "## The Gate\n\nYou can hear it before you see it."
-          }
+          "flip": { "markdown": "## The Gate\n\nYou can hear it before you see it." }
         },
         {
           "id": "sf-2",
           "src": "https://picsum.photos/seed/sf2/700/700",
           "alt": "Mission District mural",
-          "aspectRatio": 1.0,
-          "flip": {
-            "markdown": "24th and Valencia. The mural changes every few years."
-          }
+          "flip": { "markdown": "24th and Valencia. The mural changes every few years." }
         },
         {
           "id": "sf-3",
           "src": "https://picsum.photos/seed/sf3/533/800",
           "alt": "Sutro Tower at dusk",
-          "aspectRatio": 0.667,
-          "flip": {
-            "markdown": "**Sutro Tower**\n\nThe city's antenna, always looming."
-          }
+          "flip": { "markdown": "**Sutro Tower**\n\nThe city's antenna, always looming." }
         },
         {
           "id": "sf-4",
           "src": "https://picsum.photos/seed/sf4/800/500",
           "alt": "Dolores Park on a cloudy Sunday",
-          "aspectRatio": 1.6,
-          "flip": {
-            "markdown": "Dolores Park. Overcast, 58°F. Still packed."
-          }
+          "flip": { "markdown": "Dolores Park. Overcast, 58°F. Still packed." }
         },
         {
           "id": "sf-5",
           "src": "https://picsum.photos/seed/sf5/600/900",
           "alt": "A Victorian row house",
-          "aspectRatio": 0.667,
-          "flip": {
-            "markdown": "Painted Ladies, without the tourists.\n\n*Shot at 6am.*"
-          }
+          "flip": { "markdown": "Painted Ladies, without the tourists.\n\n*Shot at 6am.*" }
         }
       ]
     },
     {
       "id": "highlands",
       "title": "Scottish Highlands",
-      "description": "A week on the west coast, mostly wet.",
       "year": 2023,
       "location": "Scotland",
-      "canvas": {
-        "background": "#e9eae6",
-        "layout": {
-          "algorithm": "spiral",
-          "seed": 3,
-          "rotationRange": 8
-        }
-      },
+      "background": "#e9eae6",
       "photos": [
         {
           "id": "sc-1",
           "src": "https://picsum.photos/seed/sc1/900/600",
           "alt": "Glencoe valley",
-          "aspectRatio": 1.5,
-          "flip": {
-            "markdown": "## Glencoe\n\nThe clouds sat so low they ate the peaks."
-          }
+          "flip": { "markdown": "## Glencoe\n\nThe clouds sat so low they ate the peaks." }
         },
         {
           "id": "sc-2",
           "src": "https://picsum.photos/seed/sc2/600/800",
           "alt": "Old stone bridge",
-          "aspectRatio": 0.75,
-          "flip": {
-            "markdown": "Built in 1723. Still in daily use."
-          }
+          "flip": { "markdown": "Built in 1723. Still in daily use." }
         },
         {
           "id": "sc-3",
           "src": "https://picsum.photos/seed/sc3/800/600",
           "alt": "Loch at sunset",
-          "aspectRatio": 1.333,
-          "flip": {
-            "markdown": "Loch Leven. The light lasted maybe four minutes."
-          }
+          "flip": { "markdown": "Loch Leven. The light lasted maybe four minutes." }
         },
         {
           "id": "sc-4",
           "src": "https://picsum.photos/seed/sc4/800/533",
           "alt": "Highland cattle",
-          "aspectRatio": 1.5,
-          "flip": {
-            "markdown": "*They stared back.*"
-          }
+          "flip": { "markdown": "*They stared back.*" }
         }
       ]
     }

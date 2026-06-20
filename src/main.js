@@ -1,11 +1,11 @@
 import { marked } from 'marked';
-import { initCanvas, loadProject } from './canvas.js';
+import { initStrip, loadProject } from './strip.js';
 import data from '../data.json';
 
 const siteTitle = document.getElementById('site-title');
 const projectList = document.getElementById('project-list');
 const aboutLink = document.getElementById('about-link');
-const canvasView = document.getElementById('canvas-view');
+const projectView = document.getElementById('project-view');
 const aboutView = document.getElementById('about-view');
 const aboutContent = document.getElementById('about-content');
 const sidebar = document.getElementById('sidebar');
@@ -22,9 +22,7 @@ if (data.meta.bio) {
   aboutContent.innerHTML = marked.parse(data.meta.bio);
 }
 
-// ── Canvas ──
-
-initCanvas();
+initStrip();
 
 // ── Mobile sidebar ──
 
@@ -40,16 +38,15 @@ function closeSidebar() {
 
 menuBtn.addEventListener('click', openSidebar);
 closeBtn.addEventListener('click', closeSidebar);
-
 backdrop.addEventListener('click', closeSidebar);
 
 // ── Routing ──
 
-function showCanvas(projectId) {
+function showProject(projectId) {
   const project = data.projects.find(p => p.id === projectId);
   if (!project) return;
 
-  canvasView.hidden = false;
+  projectView.hidden = false;
   aboutView.hidden = true;
   aboutLink.classList.remove('active');
 
@@ -62,10 +59,9 @@ function showCanvas(projectId) {
 }
 
 function showAbout() {
-  canvasView.hidden = true;
+  projectView.hidden = true;
   aboutView.hidden = false;
   aboutLink.classList.add('active');
-
   document.querySelectorAll('#project-list a').forEach(a => a.classList.remove('active'));
   closeSidebar();
 }
@@ -75,14 +71,14 @@ function route() {
   if (hash === '#about') {
     showAbout();
   } else if (hash.startsWith('#project/')) {
-    showCanvas(hash.slice('#project/'.length));
+    showProject(hash.slice('#project/'.length));
   } else {
     const first = data.projects[0];
-    if (first) showCanvas(first.id);
+    if (first) showProject(first.id);
   }
 }
 
-// ── Sidebar project links ──
+// ── Sidebar links ──
 
 for (const project of data.projects) {
   const a = document.createElement('a');
