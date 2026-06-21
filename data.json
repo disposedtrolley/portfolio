@@ -16,61 +16,61 @@
         "src": "https://picsum.photos/seed/sb1/800/600",
         "alt": "A quiet street",
         "geo": { "lat": 38.7169, "lng": -9.1399, "zoom": 14 },
-        "flip": { "markdown": "Somewhere in Lisbon, 2022." }
+        "caption": "Somewhere in Lisbon, 2022."
       },
       {
         "id": "sb-2",
         "src": "https://picsum.photos/seed/sb2/600/800",
         "alt": "Market stall",
-        "flip": { "markdown": "**Borough Market**\n\nEarly morning, before the crowds." }
+        "caption": "**Borough Market**\n\nEarly morning, before the crowds."
       },
       {
         "id": "sb-3",
         "src": "https://picsum.photos/seed/sb3/900/600",
         "alt": "Rooftops at dusk",
-        "flip": { "markdown": "Barcelona from the roof of a stranger's apartment." }
+        "caption": "Barcelona from the roof of a stranger's apartment."
       },
       {
         "id": "sb-4",
         "src": "https://picsum.photos/seed/sb4/700/700",
         "alt": "Dog on steps",
-        "flip": { "markdown": "*He didn't move for twenty minutes.*" }
+        "caption": "*He didn't move for twenty minutes.*"
       },
       {
         "id": "sb-5",
         "src": "https://picsum.photos/seed/sb5/600/900",
         "alt": "Neon signs",
-        "flip": { "markdown": "## Kowloon, 2019\n\nThe last trip before everything changed." }
+        "caption": "## Kowloon, 2019\n\nThe last trip before everything changed."
       },
       {
         "id": "sb-6",
         "src": "https://picsum.photos/seed/sb6/800/533",
         "alt": "Empty beach",
-        "flip": { "markdown": "November in Cornwall. Not a soul around." }
+        "caption": "November in Cornwall. Not a soul around."
       },
       {
         "id": "sb-7",
         "src": "https://picsum.photos/seed/sb7/533/800",
         "alt": "Ferry crossing",
-        "flip": { "markdown": "Bosphorus crossing, 6am.\n\nI hadn't slept." }
+        "caption": "Bosphorus crossing, 6am.\n\nI hadn't slept."
       },
       {
         "id": "sb-8",
         "src": "https://picsum.photos/seed/sb8/800/600",
         "alt": "Café window",
-        "flip": { "markdown": "Paris does rain better than anywhere." }
+        "caption": "Paris does rain better than anywhere."
       },
       {
         "id": "sb-9",
         "src": "https://picsum.photos/seed/sb9/900/700",
         "alt": "Mountain road",
-        "flip": { "markdown": "Somewhere between Chamonix and Geneva.\n\nWe were very lost." }
+        "caption": "Somewhere between Chamonix and Geneva.\n\nWe were very lost."
       },
       {
         "id": "sb-10",
         "src": "https://picsum.photos/seed/sb10/600/800",
         "alt": "Night market",
-        "flip": { "markdown": "**Chiang Mai**\n\nThe smell of lemongrass everywhere." }
+        "caption": "**Chiang Mai**\n\nThe smell of lemongrass everywhere."
       }
     ]
   },

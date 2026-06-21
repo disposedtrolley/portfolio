@@ -14,8 +14,6 @@
   --sidebar-accent: #c8b89a;
   --page-bg: #f0ece4;
   --font-serif: 'Playfair Display', Georgia, serif;
-  --strip-height: 67vh;
-  --story-height: 33vh;
 }
 
 html, body {
@@ -72,7 +70,7 @@ html, body {
 }
 #close-btn:hover { color: var(--sidebar-text); }
 
-#scrapbook-link {
+#portfolio-link {
   display: block;
   padding: 14px 20px;
   font-size: 0.85rem;
@@ -82,8 +80,8 @@ html, body {
   border-bottom: 1px solid #2e2e2e;
   transition: color 0.15s;
 }
-#scrapbook-link:hover { color: var(--sidebar-text); }
-#scrapbook-link.active { color: var(--sidebar-accent); }
+#portfolio-link:hover { color: var(--sidebar-text); }
+#portfolio-link.active { color: var(--sidebar-accent); }
 
 #projects-section {
   flex: 1;
@@ -186,6 +184,87 @@ html, body {
   pointer-events: none;
 }
 
+/* ── Portfolio view ── */
+
+#portfolio-view {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+#portfolio-left {
+  width: 160px;
+  flex-shrink: 0;
+  overflow-y: auto;
+  scrollbar-width: none;
+  border-right: 1px solid #ddd8d0;
+  background: var(--page-bg);
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+#portfolio-left::-webkit-scrollbar { display: none; }
+
+.portfolio-thumb {
+  cursor: pointer;
+  flex-shrink: 0;
+  border: 2px solid transparent;
+  border-radius: 2px;
+  overflow: hidden;
+  transition: border-color 0.15s, opacity 0.15s;
+  opacity: 0.65;
+}
+.portfolio-thumb:hover { opacity: 1; }
+.portfolio-thumb.active {
+  border-color: var(--sidebar-accent);
+  opacity: 1;
+}
+.portfolio-thumb img {
+  display: block;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+}
+
+#portfolio-right {
+  flex: 1;
+  overflow-y: auto;
+  scrollbar-width: none;
+  background: var(--page-bg);
+  padding: 48px 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+#portfolio-right::-webkit-scrollbar { display: none; }
+
+#portfolio-photo {
+  display: block;
+  max-width: 100%;
+  max-height: 65vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+#portfolio-caption {
+  margin-top: 28px;
+  max-width: 560px;
+  width: 100%;
+  font-family: var(--font-serif);
+  font-size: 0.95rem;
+  line-height: 1.8;
+  color: #2a2a2a;
+}
+#portfolio-caption p { margin-bottom: 0.8em; }
+#portfolio-caption p:last-child { margin-bottom: 0; }
+#portfolio-caption h1,
+#portfolio-caption h2,
+#portfolio-caption h3 { font-weight: normal; margin-bottom: 0.5em; }
+
+
 /* ── Project view ── */
 
 #project-view {
@@ -194,8 +273,6 @@ html, body {
   flex: 1;
   overflow: hidden;
 }
-
-/* Photo strip — horizontally scrollable, takes 2/3 of height by default */
 
 #photo-strip {
   flex: 2;
@@ -213,8 +290,6 @@ html, body {
   height: 100%;
   padding: 32px 48px;
 }
-
-/* Story panel — bottom 1/3 */
 
 #project-story {
   flex: 1;
@@ -238,7 +313,7 @@ html, body {
 #project-story-content h1,
 #project-story-content h2 { font-weight: normal; margin-bottom: 0.6em; }
 
-/* ── Photo cards ── */
+/* ── Photo cards (project strip) ── */
 
 .photo-card {
   flex-shrink: 0;
@@ -258,93 +333,6 @@ html, body {
   display: block;
   pointer-events: none;
   user-select: none;
-}
-
-/* ── Scrapbook / canvas view ── */
-
-#scrapbook-view {
-  flex: 1;
-  overflow: hidden;
-  position: relative;
-  background: var(--page-bg);
-  cursor: grab;
-}
-#scrapbook-view:active { cursor: grabbing; }
-
-#canvas-container {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  position: relative;
-}
-
-#canvas-inner {
-  position: absolute;
-  top: 0;
-  left: 0;
-  transform-origin: 0 0;
-}
-
-.canvas-card {
-  position: absolute;
-  transform: rotate(var(--rot, 0deg));
-  border: 5px solid #fff;
-  container-type: size;
-  transform-style: preserve-3d;
-  transition: transform 0.5s cubic-bezier(0.4, 0.2, 0.2, 1),
-              box-shadow 0.2s ease;
-  cursor: pointer;
-  box-shadow: 2px 4px 16px rgba(0,0,0,0.18);
-}
-.canvas-card:hover {
-  box-shadow: 4px 8px 24px rgba(0,0,0,0.28);
-  z-index: 10;
-}
-.canvas-card.flipped {
-  transform: rotate(var(--rot, 0deg)) rotateY(180deg);
-  min-width: 200px;
-  min-height: 200px;
-  z-index: 20;
-}
-
-.canvas-card__front,
-.canvas-card__back {
-  position: absolute;
-  inset: 0;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  overflow: hidden;
-}
-
-.canvas-card__front img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  pointer-events: none;
-  user-select: none;
-}
-
-.canvas-card__back {
-  transform: rotateY(180deg);
-  padding: 8cqw;
-  overflow-y: auto;
-  font-family: var(--font-serif);
-  font-size: clamp(0.55rem, 5cqw, 0.8rem);
-  line-height: 1.5;
-}
-.canvas-card__back h1,
-.canvas-card__back h2,
-.canvas-card__back h3 { font-weight: normal; margin-bottom: 0.4em; font-size: 1.1em; }
-.canvas-card__back p { margin-bottom: 0.6em; }
-.canvas-card__back p:last-child { margin-bottom: 0; }
-
-.card-map {
-  margin-top: 12px;
-  height: 140px;
-  border-radius: 2px;
-  overflow: hidden;
-  filter: sepia(0.7) contrast(0.85) brightness(1.05) saturate(0.8);
 }
 
 /* ── About view ── */
@@ -388,6 +376,31 @@ html, body {
 
   #menu-btn { display: flex; }
   #sidebar.open ~ #main > #menu-btn { display: none; }
+
+  #portfolio-view { flex-direction: column; }
+
+  #portfolio-left {
+    width: 100%;
+    height: 100px;
+    flex-direction: row;
+    border-right: none;
+    border-bottom: 1px solid #ddd8d0;
+    padding: 8px 10px 8px 72px; /* 72px clears the 44px hamburger at left:14px */
+    overflow-x: auto;
+    overflow-y: hidden;
+    gap: 8px;
+  }
+
+  .portfolio-thumb {
+    flex-shrink: 0;
+    width: auto;
+  }
+  .portfolio-thumb img {
+    width: auto;
+    height: 80px;
+  }
+
+  #portfolio-right { padding: 28px 24px 40px; }
 
   #photo-strip-inner { padding: 20px 24px; gap: 14px; }
 

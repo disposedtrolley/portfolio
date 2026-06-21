@@ -1,20 +1,20 @@
 import { marked } from 'marked';
 import { initStrip, loadProject } from './strip.js';
-import { initCanvas, loadScrapbook } from './canvas.js';
+import { loadPortfolio } from './portfolio.js';
 import data from '../data.json';
 
-const siteTitle = document.getElementById('site-title');
-const projectList = document.getElementById('project-list');
-const aboutLink = document.getElementById('about-link');
-const scrapbookLink = document.getElementById('scrapbook-link');
-const projectView = document.getElementById('project-view');
-const scrapbookView = document.getElementById('scrapbook-view');
-const aboutView = document.getElementById('about-view');
+const siteTitle    = document.getElementById('site-title');
+const projectList  = document.getElementById('project-list');
+const aboutLink    = document.getElementById('about-link');
+const portfolioLink = document.getElementById('portfolio-link');
+const projectView  = document.getElementById('project-view');
+const portfolioView = document.getElementById('portfolio-view');
+const aboutView    = document.getElementById('about-view');
 const aboutContent = document.getElementById('about-content');
-const sidebar = document.getElementById('sidebar');
-const backdrop = document.getElementById('sidebar-backdrop');
-const menuBtn = document.getElementById('menu-btn');
-const closeBtn = document.getElementById('close-btn');
+const sidebar      = document.getElementById('sidebar');
+const backdrop     = document.getElementById('sidebar-backdrop');
+const menuBtn      = document.getElementById('menu-btn');
+const closeBtn     = document.getElementById('close-btn');
 
 // ── Site metadata ──
 
@@ -26,7 +26,6 @@ if (data.meta.bio) {
 }
 
 initStrip();
-initCanvas();
 
 // ── Mobile sidebar ──
 
@@ -44,18 +43,18 @@ menuBtn.addEventListener('click', openSidebar);
 closeBtn.addEventListener('click', closeSidebar);
 backdrop.addEventListener('click', closeSidebar);
 
-scrapbookLink.addEventListener('click', () => {
-  if (window.location.hash === '#scrapbook') showScrapbook();
+portfolioLink.addEventListener('click', () => {
+  if (window.location.hash === '#portfolio') showPortfolio();
 });
 
 // ── Routing ──
 
 function hideAll() {
   projectView.hidden = true;
-  scrapbookView.hidden = true;
+  portfolioView.hidden = true;
   aboutView.hidden = true;
   aboutLink.classList.remove('active');
-  scrapbookLink.classList.remove('active');
+  portfolioLink.classList.remove('active');
   document.querySelectorAll('#project-list a').forEach(a => a.classList.remove('active'));
 }
 
@@ -71,11 +70,11 @@ function showProject(projectId) {
   closeSidebar();
 }
 
-function showScrapbook() {
+function showPortfolio() {
   hideAll();
-  scrapbookView.hidden = false;
-  scrapbookLink.classList.add('active');
-  loadScrapbook(data.scrapbook, { force: true });
+  portfolioView.hidden = false;
+  portfolioLink.classList.add('active');
+  loadPortfolio(data.scrapbook);
   closeSidebar();
 }
 
@@ -90,12 +89,12 @@ function route() {
   const hash = window.location.hash;
   if (hash === '#about') {
     showAbout();
-  } else if (hash === '#scrapbook') {
-    showScrapbook();
+  } else if (hash === '#portfolio' || hash === '#scrapbook') {
+    showPortfolio();
   } else if (hash.startsWith('#project/')) {
     showProject(hash.slice('#project/'.length));
   } else {
-    showScrapbook();
+    showPortfolio();
   }
 }
 
@@ -108,17 +107,6 @@ for (const project of data.projects) {
   a.href = `#project/${project.id}`;
   projectList.appendChild(a);
 }
-
-// Re-scatter on resize (debounced). Skip browser-level pinch-zoom events,
-// which fire window.resize but don't change the layout dimensions.
-let resizeTimer;
-window.addEventListener('resize', () => {
-  clearTimeout(resizeTimer);
-  resizeTimer = setTimeout(() => {
-    if (window.visualViewport && window.visualViewport.scale !== 1) return;
-    if (!scrapbookView.hidden) loadScrapbook(data.scrapbook);
-  }, 200);
-});
 
 window.addEventListener('hashchange', route);
 route();
